@@ -1,2 +1,67 @@
 server:
   port: 8085
+  servlet:
+    context-path: /rearinfo
+
+#spring:
+#  application:
+#    name: information
+#  datasource:
+#    druid:
+#      # 数据源一
+#      main:
+#        url: jdbc:mysql://129.211.145.40/muxui_blog?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+#        username: root
+#        password: root
+#      # JDBC 配置
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      # 阿里连接池
+#      type: com.alibaba.druid.pool.DruidDataSource
+#      # 配置初始化大小、最小、最大
+#      initial-size: 5
+#      max-active: 50
+#      min-idle: 10
+#      # 配置获取连接等待超时的时间，5分钟
+#      max-wait: 300000
+
+spring:
+  profiles:
+    active: dev
+  datasource:
+    name: muxui_blog
+    url: jdbc:mysql://129.211.145.40/muxui_blog?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: root
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      connection-timeout: 30000
+      minimum-idle: 5
+      maximum-pool-size: 20
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: muxui_blog
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 2MB  #设置支持的单个上传文件大小
+      max-request-size: 6MB  #设置最大的请求文件大小，设置总体大小的请求
+      file-size-threshold: 512KB #当上传文件达到指定配置量的时候，会将文件内容写入到磁盘
+      location: /   #设置上传文件的临时目录
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*/*.xml
+  typeAliasesPackage: com.muxui.blog.*.dao
+  global-config:
+    db-config:
+      #数据库大写下划线转换
+      capital-mode: false
+      #删除
+      logic-delete-value: 1
+      #不删除
+      logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true

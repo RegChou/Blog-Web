@@ -1,28 +1,7 @@
 server:
   port: 8085
   servlet:
-    context-path: /rearinfo
-
-#spring:
-#  application:
-#    name: information
-#  datasource:
-#    druid:
-#      # 数据源一
-#      main:
-#        url: jdbc:mysql://129.211.145.40/muxui_blog?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
-#        username: root
-#        password: root
-#      # JDBC 配置
-#      driver-class-name: com.mysql.cj.jdbc.Driver
-#      # 阿里连接池
-#      type: com.alibaba.druid.pool.DruidDataSource
-#      # 配置初始化大小、最小、最大
-#      initial-size: 5
-#      max-active: 50
-#      min-idle: 10
-#      # 配置获取连接等待超时的时间，5分钟
-#      max-wait: 300000
+    context-path: /api/rearinfo
 
 spring:
   profiles:
@@ -53,15 +32,13 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*/*.xml
-  typeAliasesPackage: com.muxui.blog.*.dao
+  typeAliasesPackage: com.muxui.blog.service.*.dao
   global-config:
     db-config:
       #数据库大写下划线转换
       capital-mode: false
-      #删除
-      logic-delete-value: 1
-      #不删除
-      logic-not-delete-value: 0
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: true

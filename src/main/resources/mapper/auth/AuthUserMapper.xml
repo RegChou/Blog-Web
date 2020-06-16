@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muxui.blog.service.auth.dao.AuthUserDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.muxui.blog.service.auth.domain.AuthUser">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="nickname" property="nickname"/>
+        <result column="role_id" property="roleId"/>
+        <result column="avatar" property="avatar"/>
+        <result column="create_time" property="createTime"/>
+        <result column="status" property="status"/>
+    </resultMap>
+    <select id="selectAvatar" resultType="java.lang.String">
+        SELECT avatar
+        FROM muxui_auth_user
+        WHERE role_id = 2
+        limit 1
+    </select>
+
+    <select id="selectAdmin" resultType="com.muxui.blog.service.auth.domain.AuthUser">
+        SELECT `id`,
+               `social_id`,
+               `phone`,
+               `email`,
+               `password`,
+               `name`,
+               `role_id`,
+               `introduction`,
+               `avatar`,
+               `create_time`,
+               `access_key`,
+               `secret_key`,
+               `status`
+        FROM muxui_auth_user
+        WHERE role_id = 2
+        limit 1
+    </select>
+
+</mapper>

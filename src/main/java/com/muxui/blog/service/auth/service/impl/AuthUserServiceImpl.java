@@ -22,20 +22,14 @@ public class AuthUserServiceImpl extends ServiceImpl<AuthUserDao, AuthUser> impl
     @Autowired
     private AuthUserDao authUserDao;
 
-
-
     @Override
     public Result registerAdmin(UserDTO userDTO) {
-        AuthUser authUser = authUserDao.selectOne(new LambdaQueryWrapper<AuthUser>().eq(AuthUser::getRoleId, RoleEnum.ADMIN.getRoleId()));
-        if (authUser == null){
-            authUser = new AuthUser();
-            authUser.setName(userDTO.getEmail());
-            authUser.setEmail(userDTO.getEmail());
-            authUser.setRoleId(RoleEnum.ADMIN.getRoleId());
-            authUser.setPassword(SecureUtil.md5(userDTO.getPassword()));
-            authUser.setCreateTime(LocalDateTime.now());
-            authUserDao.insert(authUser);
-        }
+        AuthUser authUser = new AuthUser();
+        authUser.setName(userDTO.getEmail());
+        authUser.setEmail(userDTO.getEmail());
+        authUser.setRoleId(RoleEnum.ADMIN.getRoleId());
+        authUser.setPassword(SecureUtil.md5(userDTO.getPassword()));
+        authUserDao.insert(authUser);
         return Result.SUCCESS();
-    }
+}
 }

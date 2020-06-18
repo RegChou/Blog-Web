@@ -2,9 +2,9 @@ package com.muxui.blog.service.auth.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
  * @createDate 2020/6/16
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("muxui_auth_user")
 public class AuthUser extends Model<AuthUser> {
     private static final long serialVersionUID = 1L;
@@ -35,10 +35,6 @@ public class AuthUser extends Model<AuthUser> {
      */
     private String email;
 
-    /**
-     * 手机
-     */
-    private String phone;
 
     /**
      * 密码
@@ -63,7 +59,14 @@ public class AuthUser extends Model<AuthUser> {
     /**
      * 注册时间
      */
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
+
+    /**
+     * 修改时间
+     */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updataTime;
 
 
     /**
@@ -76,11 +79,6 @@ public class AuthUser extends Model<AuthUser> {
      * 用户状态 0 正常 1 锁定
      */
     private Integer status;
-
-
-    private String accessKey;
-
-    private String secretKey;
 
     @Override
     protected Serializable pkVal() {

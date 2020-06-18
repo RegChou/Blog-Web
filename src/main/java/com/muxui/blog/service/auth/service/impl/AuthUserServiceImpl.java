@@ -29,7 +29,6 @@ public class AuthUserServiceImpl extends ServiceImpl<AuthUserDao, AuthUser> impl
         AuthUser authUser = authUserDao.selectOne(new LambdaQueryWrapper<AuthUser>().eq(AuthUser::getRoleId, RoleEnum.ADMIN.getRoleId()));
         if (authUser == null){
             authUser = new AuthUser();
-            authUser.setPhone(userDTO.getPhone());
             authUser.setName(userDTO.getEmail());
             authUser.setEmail(userDTO.getEmail());
             authUser.setRoleId(RoleEnum.ADMIN.getRoleId());
@@ -37,6 +36,6 @@ public class AuthUserServiceImpl extends ServiceImpl<AuthUserDao, AuthUser> impl
             authUser.setCreateTime(LocalDateTime.now());
             authUserDao.insert(authUser);
         }
-        return Result.createWithSuccessMessage();
+        return Result.SUCCESS();
     }
 }

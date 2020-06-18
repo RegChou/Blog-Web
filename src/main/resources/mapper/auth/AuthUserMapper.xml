@@ -10,6 +10,7 @@
         <result column="role_id" property="roleId"/>
         <result column="avatar" property="avatar"/>
         <result column="create_time" property="createTime"/>
+        <result column="updata_time" property="updata_time"/>
         <result column="status" property="status"/>
     </resultMap>
     <select id="selectAvatar" resultType="java.lang.String">
@@ -22,7 +23,6 @@
     <select id="selectAdmin" resultType="com.muxui.blog.service.auth.domain.AuthUser">
         SELECT `id`,
                `social_id`,
-               `phone`,
                `email`,
                `password`,
                `name`,
@@ -30,8 +30,7 @@
                `introduction`,
                `avatar`,
                `create_time`,
-               `access_key`,
-               `secret_key`,
+               `updata_time`,
                `status`
         FROM muxui_auth_user
         WHERE role_id = 2

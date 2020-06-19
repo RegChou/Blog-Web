@@ -66,7 +66,7 @@ public class AuthUser extends Model<AuthUser> {
      * 修改时间
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updataTime;
+    private LocalDateTime updateTime;
 
 
     /**

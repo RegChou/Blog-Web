@@ -1,11 +1,9 @@
-package com.muxui.blog.system.enums;
+package com.muxui.blog.common.enums;
 
 import java.util.HashMap;
 import java.util.Map;
 
-
 public enum RoleEnum {
-
     /**
      * 普通用户
      */

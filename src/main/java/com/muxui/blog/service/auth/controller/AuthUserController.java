@@ -1,6 +1,8 @@
 package com.muxui.blog.service.auth.controller;
 
 import com.muxui.blog.common.base.Result;
+import com.muxui.blog.service.auth.domain.AuthUser;
+import com.muxui.blog.service.auth.dto.EmailDTO;
 import com.muxui.blog.service.auth.dto.UserDTO;
 import com.muxui.blog.service.auth.service.AuthUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +26,13 @@ public class AuthUserController {
     public Result registerAdminByGithub(@RequestBody UserDTO userDTO) {
         return authUserService.registerAdmin(userDTO);
     }
+    @PostMapping("/admin/v1/email")
+    public Result sendRegisterEmail(@RequestBody EmailDTO emailDTO) {
+        return authUserService.sendRegisterEmail(emailDTO);
+    }
 
+    @PostMapping("/admin/v1/login")
+    public Result adminLogin(@RequestBody AuthUser authUser) {
+        return authUserService.login(authUser);
+    }
 }

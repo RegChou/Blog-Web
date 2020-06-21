@@ -16,6 +16,7 @@ public enum ResultCode {
     FAIL(false,10001,"操作失败"),
     UNAUTHENTICATED(false,10002,"您还未登录"),
     UNAUTHORISE(false,10003,"权限不足"),
+    INVALID_TOKEN(false, 10004,"token解析失败" ),
     //---权限操作返回码----
     //---其他操作返回码----
     CAPTCHA_ERROR(false,100004,"验证码错误"),

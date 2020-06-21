@@ -2,11 +2,14 @@ package com.muxui.blog.service.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.muxui.blog.common.base.Result;
+import com.muxui.blog.service.auth.domain.vo.AuthUserVO;
 import com.muxui.blog.service.auth.dto.EmailDTO;
 import com.muxui.blog.service.auth.dto.UserDTO;
 import com.muxui.blog.service.auth.domain.AuthUser;
 
 public interface AuthUserService extends IService<AuthUser> {
+
+    Result getUserInfo(AuthUserVO authUserVO);
 
     /**
      *  注册管理员
@@ -24,8 +27,14 @@ public interface AuthUserService extends IService<AuthUser> {
 
     /**
      * 登录
-     * @param authUser
+     * @param authUserVO
      * @return
      */
-    Result login(AuthUser authUser);
+    Result login(AuthUserVO authUserVO);
+
+    /**
+     * 退出登录
+     * @return
+     */
+    Result logout();
 }

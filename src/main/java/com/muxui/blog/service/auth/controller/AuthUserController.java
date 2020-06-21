@@ -43,7 +43,7 @@ public class AuthUserController {
         return authUserService.login(authUserVO);
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/v1/logout")
     public Result logout() {
         return authUserService.logout();
     }

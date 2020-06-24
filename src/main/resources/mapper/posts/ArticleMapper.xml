@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muxui.blog.service.posts.dao.ArticleDao">
+        <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.muxui.blog.service.posts.domain.Article">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="thumbnail" property="thumbnail"/>
+        <result column="comments" property="comments"/>
+        <result column="status" property="status"/>
+        <result column="summary" property="summary"/>
+        <result column="views" property="views"/>
+        <result column="author_id" property="authorId"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="is_comment" property="isComment"/>
+        <result column="weight" property="weight"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectPostsList" resultType="com.muxui.blog.service.posts.domain.vo.PostsVO">
+        SELECT
+        DISTINCT(ac.id),
+        ac.title,
+        ac.status,
+        ac.summary,
+        ac.thumbnail,
+        users.name author,
+        ac.views,
+        ac.comments,
+        ac.category_id as categoryId,
+        category.name as categoryName,
+        ac.weight,
+        ac.create_time createTime
+        FROM
+        muxui_article ac
+        LEFT JOIN muxui_auth_user users ON users.id = ac.author_id
+        LEFT JOIN muxui_in_tags inTags ON inTags.article_id = ac.id
+        LEFT JOIN muxui_tags tags ON inTags.tags_id = tags.id
+        LEFT JOIN muxui_category category ON category.id=ac.category_id
+        <where>
+            <if test="condition.archiveDate != null">
+                BETWEEN DATE_FORMAT( condition.archiveDate, "%Y-%m-01 00:00:00") AND DATE_FORMAT(condition.archiveDate, "%Y-%m-01 59:59:59" )
+            </if>
+            <if test="condition.createTime != null">
+                AND ac.create_time = #{condition.createTime}
+            </if>
+            <if test="condition.keywords != null and condition.keywords != ''">
+                AND (ac.title LIKE #{condition.keywords} OR ac.summary LIKE #{condition.keywords})
+            </if>
+            <if test="condition.tagsName != null and condition.tagsName != ''">
+                AND tags.ac = #{condition.tagsName}
+            </if>
+            <if test="condition.categoryId != null and condition.categoryId != ''">
+                AND ac.category_id  = #{condition.categoryId}
+            </if>
+            <if test="condition.postsTagsId != null and condition.postsTagsId != ''">
+                AND ac.tags_id = #{condition.postsTagsId}
+            </if>
+            <if test="condition.title != null and condition.title != ''">
+                AND ac.title LIKE #{condition.title}
+            </if>
+            <if test="condition.status != null and condition.status != ''">
+                AND ac.status = #{condition.status}
+            </if>
+        </where>
+        <choose>
+            <when test="condition.isWeight != null and condition.isWeight == 1" >
+                ORDER BY ac.weight DESC
+            </when>
+            <otherwise>
+                ORDER BY ac.id DESC
+            </otherwise>
+        </choose>
+    </select>
+
+</mapper>

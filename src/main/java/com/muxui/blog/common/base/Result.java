@@ -22,6 +22,7 @@ public class Result {
     private boolean success;//是否成功
     private Integer code;// 返回码
     private String message;//返回信息
+    private PageInfo pageInfo; // 分页信息对象
     private Object data;// 返回数据
 
     public Result(ResultCode code) {
@@ -35,6 +36,14 @@ public class Result {
         this.code = code.code;
         this.message = code.message;
         this.data = data;
+    }
+
+    public Result(ResultCode code,Object data,PageInfo pageInfo) {
+        this.success = code.success;
+        this.code = code.code;
+        this.message = code.message;
+        this.data = data;
+        this.pageInfo=pageInfo;
     }
 
     public Result(Integer code,String message,boolean success) {

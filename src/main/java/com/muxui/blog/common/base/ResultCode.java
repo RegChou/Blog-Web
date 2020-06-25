@@ -21,6 +21,7 @@ public enum ResultCode {
     //---其他操作返回码----
     CAPTCHA_ERROR(false,100004,"验证码错误"),
     ACCOUNT_EXIST(false,100005, "账户已存在"),
+    DATA_NO_EXIST(false, 100006,"该数据不存在"),
     SERVER_ERROR(false,99999,"抱歉，系统繁忙，请稍后重试！"),
     //---用户操作返回码  2xxxx----
     LOGINSUCCESS(true,20000,"登录成功！"),

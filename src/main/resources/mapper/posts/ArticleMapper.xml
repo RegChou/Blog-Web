@@ -74,4 +74,29 @@
         </choose>
     </select>
 
+    <select id="selectOneById" resultType="com.muxui.blog.service.posts.domain.Article">
+        SELECT
+            ac.`id`,
+            ac.`author_id`,
+            ac.`title`,
+            ac.`thumbnail`,
+            ac.`comments`,
+            ac.`is_comment`,
+            ac.`status`,
+            ac.`summary`,
+            ac.`views`,
+            ac.`weight`,
+            ac.`category_id`,
+            category.name as categoryName,
+            ac.`create_time`,
+            ac.`update_time`
+        FROM muxui_article as ac
+                 LEFT JOIN muxui_category as category ON category.id=ac.category_id
+        WHERE ac.id=#{id}
+    </select>
+
+    <update id="incrementView">
+        UPDATE muxui_article SET views = views + 1 WHERE id = #{id}
+    </update>
+
 </mapper>

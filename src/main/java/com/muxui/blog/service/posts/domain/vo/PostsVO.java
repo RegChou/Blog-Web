@@ -2,6 +2,7 @@ package com.muxui.blog.service.posts.domain.vo;
 
 
 import com.muxui.blog.common.base.PageResult;
+import com.muxui.blog.service.category.domain.vo.TagsVO;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -11,6 +12,12 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class PostsVO extends PageResult<PostsVO> {
+
+
+    /**
+     * 主键
+     */
+    protected Long id;
 
     /**
      * 文章标题

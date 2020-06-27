@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muxui.blog.service.category.dao.CategoryDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.muxui.blog.service.category.domain.Category">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="sort" property="sort"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="BASE_SQL">id,name,create_time, create_by, update_time, update_by</sql>
+
+    <select id="selectCategoryPostsTotal" resultType="com.muxui.blog.service.category.domain.vo.CategoryVO">
+       SELECT
+        categoryTags.category_id id,
+        COUNT(*) total
+        FROM
+        muxui_category_tags categoryTags
+        LEFT JOIN muxui_in_tags inTags ON inTags.tags_id = categoryTags.tags_id
+        WHERE
+        inTags.tags_id IS NOT NULL
+        GROUP BY categoryTags.category_id
+    </select>
+
+
+    <select id="selectStatistics" resultType="com.muxui.blog.service.category.domain.vo.CategoryVO">
+        SELECT
+           id,(SELECT COUNT( 1 ) FROM muxui_article WHERE category_id = category.id AND status=2) as total, name
+        FROM
+            muxui_category AS category
+    </select>
+
+    <select id="selectListPage" resultType="com.muxui.blog.service.category.domain.Category">
+        SELECT <include refid="BASE_SQL"/>
+        FROM muxui_category
+        <where>
+            <if test="condition.keywords != null and condition.keywords != ''">
+                AND name like #{condition.name}
+            </if>
+            <if test="condition.name != null and condition.name != ''">
+                AND name = #{condition.name}
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+</mapper>

@@ -17,6 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+/**
+ * @author ou
+ */
 @Service
 public class ALiYunOSSUploadFileTemplateServiceImpl implements UploadFileTemplateService, InitializingBean {
 

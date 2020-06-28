@@ -8,13 +8,13 @@ spring:
     active: dev
   datasource:
     name: muxui_blog
-#    url: jdbc:mysql://129.211.145.40:9527/muxui_blog?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
-    url: jdbc:mysql://127.0.0.1:3306/muxui_blog?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+    url: jdbc:mysql://129.211.145.40:9527/muxui_blog?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+#    url: jdbc:mysql://127.0.0.1:3306/muxui_blog?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
     username: root
-    password: root
+    password: d5V6mA@$d9K2
     type: com.zaxxer.hikari.HikariDataSource
-#    driver-class-name: com.mysql.jdbc.Driver
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
+#    driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connection-timeout: 30000
       minimum-idle: 5
@@ -32,7 +32,8 @@ spring:
       file-size-threshold: 512KB #当上传文件达到指定配置量的时候，会将文件内容写入到磁盘
       location: /   #设置上传文件的临时目录
   redis:
-    host: 129.211.145.40
+#    host: 129.211.145.40
+    host: 127.0.0.1
     port: 6379
 
 mybatis-plus:

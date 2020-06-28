@@ -26,7 +26,8 @@ public enum ResultCode {
     SERVER_ERROR(false,99999,"抱歉，系统繁忙，请稍后重试！"),
     //---用户操作返回码  2xxxx----
     LOGINSUCCESS(true,20000,"登录成功！"),
-    MOBILEORPASSWORDERROR(false,20001,"用户名或密码错误");
+    MOBILEORPASSWORDERROR(false,20001,"用户名或密码错误"),
+    USERNOTEXIST(true,20002,"没有当前登录用户，请注册！");
 
 
 

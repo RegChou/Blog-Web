@@ -103,7 +103,7 @@ public class AuthUserServiceImpl extends ServiceImpl<AuthUserDao, AuthUser> impl
             // 把验证码存到redis
             redisTemplate.opsForValue().set("article_" + emailDTO.getEmail(), code, 5, TimeUnit.MINUTES);
             //此处填写邮件内容
-            email.setMsg("尊敬的用户您好,您本次注册的验证码是:" + code);
+            email.setMsg("您本次注册的验证码是:" + code);
             System.out.println("您本次注册的验证码是:" + code);
             email.send();
             return Result.SUCCESS();
@@ -122,6 +122,9 @@ public class AuthUserServiceImpl extends ServiceImpl<AuthUserDao, AuthUser> impl
             AuthUser authUser = authUserDao.selectOne(new LambdaQueryWrapper<AuthUser>()
                     .eq(AuthUser::getRoleId, RoleEnum.ADMIN.getRoleId())
                     .eq(AuthUser::getEmail, authUserVO.getEmail()));
+            if (authUser == null){
+                return new Result(ResultCode.USERNOTEXIST);
+            }
             String psw = SecureUtil.md5(authUserVO.getPassword());
             if (!authUser.getPassword().equals(psw)) {
                 return new Result(ResultCode.MOBILEORPASSWORDERROR);

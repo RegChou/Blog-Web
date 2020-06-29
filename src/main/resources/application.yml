@@ -32,9 +32,9 @@ spring:
       file-size-threshold: 512KB #当上传文件达到指定配置量的时候，会将文件内容写入到磁盘
       location: /   #设置上传文件的临时目录
   redis:
-#    host: 129.211.145.40
-    host: 127.0.0.1
+    host: 129.211.145.40
     port: 6379
+    password: IaG8M$Z7ievE
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml

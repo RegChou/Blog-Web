@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muxui.blog.service.log.dao.AuthUserLogDao">
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,user_id as userId,ip,url,parameter,device,description,code,run_time as runTime,create_time as createTime,browser_version as browserVersion,browser_name as browserName
+    </sql>
+
+    <resultMap id="BaseResultMap" type="com.muxui.blog.service.log.domain.AuthUserLog">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="ip" property="ip"/>
+        <result column="url" property="url"/>
+        <result column="parameter" property="parameter"/>
+        <result column="device" property="device"/>
+        <result column="code" property="code"/>
+        <result column="description" property="description"/>
+        <result column="run_time" property="runTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="browser_version" property="browserVersion"/>
+        <result column="browser_name" property="browserName"/>
+    </resultMap>
+
+    <select id="selectLogsList" resultType="com.muxui.blog.service.log.domain.AuthUserLog">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM muxui_auth_user_log
+        <where>
+            <if test="condition.userId != null and condition.userId != ''">AND user_id=#{condition.userId} </if>
+            <if test="condition.ip != null and condition.ip != ''">AND ip=#{condition.ip} </if>
+            <if test="condition.url != null and condition.url != ''">AND url LIKE '%${condition.url}%' </if>
+            <if test="condition.parameter != null and condition.parameter != ''">AND parameter LIKE '%${condition.parameter}%' </if>
+            <if test="condition.device != null and condition.device != ''">AND device LIKE '%${condition.device}%' </if>
+            <if test="condition.description != null and condition.description != ''">AND description LIKE '%${condition.description}%' </if>
+            <if test="condition.code != null and condition.code != ''">AND code = #{condition.code} </if>
+            <if test="condition.browserName != null and condition.browserName != ''">AND browser_name LIKE '%${condition.browserName}%' </if>
+            <if test="condition.browserVersion != null and condition.browserVersion != ''">AND browser_version = #{condition.browserVersion} </if>
+            <if test="condition.createTime != null">and DATE_FORMAT(#{condition.createTime},'%Y-%m-%d')=DATE_FORMAT(create_time, '%Y-%m-%d')  </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+    <select id="selectListByCode" resultType="com.muxui.blog.service.log.domain.vo.AuthUserLogVO">
+        SELECT
+        <include refid="Base_Column_List"/>,
+        COUNT( 1 ) AS count
+        FROM plumemo_auth_user_log
+        WHERE CODE = #{code}
+        GROUP BY parameter
+    </select>
+
+    <select id="selectPostsListStatistics" resultType="com.muxui.blog.service.log.domain.vo.AuthUserLogVO">
+        SELECT
+        <choose>
+            <when test="type == 'day'">
+                DATE_FORMAT(create_time,'%Y-%m-%d %H:00:00')
+            </when>
+            <when test="type == 'week'">
+                DATE_FORMAT(create_time,'%Y-%m-%d 00:00:00')
+            </when>
+            <when test="type =='month'">
+                DATE_FORMAT(create_time,'%Y-%m-00 00:00:00')
+            </when>
+            <when test="type == 'year'">
+                DATE_FORMAT(create_time,'%Y-01-01 00:00:00')
+            </when>
+            <otherwise>
+                DATE_FORMAT(create_time,'%Y-%m-%d 00:00:00')
+            </otherwise>
+        </choose>
+        AS createTime,
+        COUNT(*) AS viewTotal
+        FROM muxui_auth_user_log
+        WHERE code IN('002') AND create_time >= #{startTime} and create_time &lt;= #{endTime}
+        GROUP BY createTime
+
+    </select>
+
+    <select id="selectPostsRanking" resultType="com.muxui.blog.service.log.domain.vo.AuthUserLogVO">
+        SELECT
+            COUNT( * ) viewTotal,
+            parameter,
+            COUNT( DISTINCT ( user_id ) ) userTotal
+        FROM
+            muxui_auth_user_log
+        WHERE
+            `code` = '002' AND create_time >= #{startTime} and create_time &lt;= #{endTime}
+        GROUP BY
+            parameter
+        ORDER BY
+            viewTotal DESC
+    </select>
+</mapper>

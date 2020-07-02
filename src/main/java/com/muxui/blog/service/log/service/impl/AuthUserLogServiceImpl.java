@@ -32,6 +32,24 @@ public class AuthUserLogServiceImpl extends ServiceImpl<AuthUserLogDao, AuthUser
     @Autowired
     private AuthUserLogDao authUserLogDao;
 
+    @Override
+    public Result saveLogs(AuthUserLogVO authUserLogVO) {
+        logger.debug("saveLogs AuthUserLog ,the authUserLogVO is {}", authUserLogVO.toString());
+        AuthUserLog authUserLog = new AuthUserLog();
+        authUserLog.setIp(authUserLogVO.getIp())
+                .setCreateTime(authUserLogVO.getCreateTime())
+                .setDescription(authUserLogVO.getDescription())
+                .setDevice(authUserLogVO.getDevice())
+                .setParameter(authUserLogVO.getParameter())
+                .setUrl(authUserLogVO.getUrl())
+                .setCode(authUserLogVO.getCode())
+                .setUserId(authUserLogVO.getUserId())
+                .setRunTime(authUserLogVO.getRunTime())
+                .setBrowserName(authUserLogVO.getBrowserName())
+                .setBrowserVersion(authUserLogVO.getBrowserVersion());
+        authUserLogDao.insert(authUserLog);
+        return Result.SUCCESS();
+    }
 
     @Override
     public Result getLogsList(AuthUserLogVO authUserLogVO) {

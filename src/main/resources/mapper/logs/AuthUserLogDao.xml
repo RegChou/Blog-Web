@@ -89,4 +89,12 @@
         ORDER BY
             viewTotal DESC
     </select>
+
+    <select id="deletelog">
+        DELETE
+        FROM
+            muxui_auth_user_log
+        WHERE
+            datediff( curdate(), create_time )>=5
+    </select>
 </mapper>

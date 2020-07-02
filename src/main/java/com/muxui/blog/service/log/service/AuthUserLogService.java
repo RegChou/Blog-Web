@@ -10,7 +10,9 @@ import com.muxui.blog.service.log.domain.vo.AuthUserLogVO;
  * 用户行为日志记录表:业务接口类
  */
 public interface AuthUserLogService extends IService<AuthUserLog> {
-    
+
+    Result saveLogs(AuthUserLogVO authUserLogVO);
+
     /**
      * 分页查询用户行为日志记录表
      */

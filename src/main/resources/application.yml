@@ -49,3 +49,6 @@ mybatis-plus:
     map-configuration-to-camel-case: true
     cache-enabled: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  config: classpath:config/spring-logback.xml

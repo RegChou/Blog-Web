@@ -38,4 +38,9 @@ public interface AuthUserLogDao extends BaseMapper<AuthUserLog> {
      * @return
      */
     List<AuthUserLogVO> selectPostsRanking(Page page, @Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
+
+    /**
+     * 每周日删除前5天的数据
+     */
+    void deletelog();
 }

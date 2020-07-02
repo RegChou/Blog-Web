@@ -6,8 +6,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.muxui.blog.common.base.BeanTool;
+import com.muxui.blog.common.base.Constants;
 import com.muxui.blog.common.base.Result;
 import com.muxui.blog.common.base.ResultCode;
 import com.muxui.blog.service.auth.dao.AuthTokenDao;
@@ -37,7 +37,7 @@ public class SessionUtil {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
         // 获取请求头Token值
-        String token = Optional.ofNullable(request.getHeader("Authorization")).orElse(null);
+        String token = Optional.ofNullable(request.getHeader(Constants.AUTHENTICATION)).orElse(null);
 
         if (StringUtils.isBlank(token)) {
             return null;
@@ -68,7 +68,7 @@ public class SessionUtil {
         AuthTokenDao authTokenDao = BeanTool.getBean(AuthTokenDao.class);
         Integer count = authTokenDao.selectCount(new LambdaQueryWrapper<AuthToken>().eq(AuthToken::getToken, token).eq(AuthToken::getUserId, user.getId()).ge(AuthToken::getExpireTime,
                 LocalDateTime.now()));
-        if (count.equals(Constants.ZERO)) {
+        if (count.equals(com.baomidou.mybatisplus.core.toolkit.Constants.ZERO)) {
             new Result(ResultCode.INVALID_TOKEN);
         }
 

@@ -3,6 +3,8 @@ package com.muxui.blog.common.base;
 
 public class Constants {
 
+    // header认证字段
+    public static final String AUTHENTICATION = "Authorization";
 
     // 文件上传类型配置项
     public static final String STORE_TYPE = "store_type";

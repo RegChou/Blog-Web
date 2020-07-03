@@ -32,7 +32,7 @@ public class SchedulerTask {
     }
 
 
-    @Scheduled(cron = " 0 0 0 ？* SAT")
+    @Scheduled(cron = "0 0 0 ? * 1")
     private void deletelog(){
         authUserLogDao.deletelog();
     }

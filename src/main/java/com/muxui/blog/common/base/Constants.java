@@ -5,6 +5,8 @@ public class Constants {
 
     // header认证字段
     public static final String AUTHENTICATION = "Authorization";
+    // 树形路径分隔符
+    public static final String TREE_PATH = ".";
 
     // 文件上传类型配置项
     public static final String STORE_TYPE = "store_type";

@@ -27,7 +27,8 @@ public enum ResultCode {
     //---用户操作返回码  2xxxx----
     LOGINSUCCESS(true,20000,"登录成功！"),
     MOBILEORPASSWORDERROR(false,20001,"用户名或密码错误"),
-    USERNOTEXIST(false,20002,"账户不存在，请注册！");
+    USERNOTEXIST(false,20002,"账户不存在，请注册！"),
+    UPDATE_PASSWORD_ERROR(false,20003,"密码修改失败！");
 
 
 

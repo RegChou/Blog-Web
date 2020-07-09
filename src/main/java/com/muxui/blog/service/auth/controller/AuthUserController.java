@@ -1,5 +1,6 @@
 package com.muxui.blog.service.auth.controller;
 
+import com.muxui.blog.common.annotation.LoginRequired;
 import com.muxui.blog.common.base.Result;
 import com.muxui.blog.common.enums.RoleEnum;
 import com.muxui.blog.service.auth.domain.AuthUser;
@@ -43,8 +44,43 @@ public class AuthUserController {
         return authUserService.login(authUserVO);
     }
 
+    @LoginRequired
+    @PutMapping("/admin/v1/update")
+    public Result updateAdmin(@RequestBody AuthUserVO authUserVO) {
+        return authUserService.updateAdmin(authUserVO);
+    }
+
+    @LoginRequired
+    @PutMapping("/password/v1/update")
+    public Result updatePassword(@RequestBody AuthUserVO authUserVO) {
+        return authUserService.updatePassword(authUserVO);
+    }
+
+
     @PostMapping("/v1/logout")
     public Result logout() {
         return authUserService.logout();
     }
+
+    @LoginRequired
+    @GetMapping("/user/v1/list")
+    public Result getUserList(AuthUserVO authUserVO) {
+        return authUserService.getUserList(authUserVO);
+    }
+
+    @DeleteMapping("/user/v1/{id}")
+    public Result deleteUser(@PathVariable Long id) {
+        return authUserService.deleteUsers(id);
+    }
+
+    @LoginRequired(role = RoleEnum.ADMIN)
+    @PutMapping("/status/v1/update")
+    public Result saveAuthUserStatus(@RequestBody AuthUserVO authUserVO) {
+        return authUserService.saveAuthUserStatus(authUserVO);
+    }
+
+//    @GetMapping("/github/v1/get")
+//    public Result oauthLoginByGithub() {
+//        return authUserService.oauthLoginByGithub();
+//    }
 }

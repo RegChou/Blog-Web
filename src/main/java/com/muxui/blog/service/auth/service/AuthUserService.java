@@ -37,4 +37,26 @@ public interface AuthUserService extends IService<AuthUser> {
      * @return
      */
     Result logout();
+
+    /**
+     * 获取用户列表
+     *
+     * @param authUserVO
+     * @return
+     */
+    Result getUserList(AuthUserVO authUserVO);
+
+    Result deleteUsers(Long id);
+
+    Result saveAuthUserStatus(AuthUserVO authUserVO);
+
+    /**
+     * 更新管理员个人资料
+     *
+     * @param authUserVO
+     * @return
+     */
+    Result updateAdmin(AuthUserVO authUserVO);
+
+    Result updatePassword(AuthUserVO authUserVO);
 }

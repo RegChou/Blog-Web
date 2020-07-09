@@ -30,7 +30,6 @@
                `introduction`,
                `avatar`,
                `create_time`,
-               `updata_time`,
                `status`
         FROM muxui_auth_user
         WHERE role_id = 2

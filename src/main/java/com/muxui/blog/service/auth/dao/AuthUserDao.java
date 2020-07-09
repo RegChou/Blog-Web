@@ -14,4 +14,5 @@ import org.springframework.stereotype.Repository;
 public interface AuthUserDao extends BaseMapper<AuthUser> {
 
 
+    AuthUser selectAdmin();
 }

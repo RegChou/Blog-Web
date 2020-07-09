@@ -6,6 +6,7 @@ import com.muxui.blog.service.auth.domain.AuthToken;
 import com.muxui.blog.service.log.dao.AuthUserLogDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
  */
 @Component
 @Slf4j
+@EnableScheduling //开启定时任务
 public class SchedulerTask {
 
     @Autowired

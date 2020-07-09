@@ -1,5 +1,6 @@
 package com.muxui.blog.service.auth.domain.vo;
 
+import com.muxui.blog.common.base.PageResult;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -7,7 +8,7 @@ import java.util.List;
 
 @Data
 @Accessors(chain = true)
-public class AuthUserVO {
+public class AuthUserVO extends PageResult<AuthUserVO> {
 
     /**
      * 主键
@@ -29,7 +30,7 @@ public class AuthUserVO {
      */
     private String password;
 
-
+    private String passwordOld;
     /**
      * 角色主键 1 普通用户 2 admin
      */
@@ -54,5 +55,6 @@ public class AuthUserVO {
      */
     private String email;
 
-
+    private Integer userCount;
+    private Integer toDayNew;
 }

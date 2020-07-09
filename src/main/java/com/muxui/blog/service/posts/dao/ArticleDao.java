@@ -13,14 +13,16 @@ import java.util.List;
 public interface ArticleDao extends BaseMapper<Article> {
     /**
      * 查询文章列表
+     *
      * @param page
      * @param condition
      * @return
      */
-    List<PostsVO> selectPostsList(Page<PostsVO> page, @Param("condition")PostsVO condition);
+    List<PostsVO> selectPostsList(Page<PostsVO> page, @Param("condition") PostsVO condition);
 
     /**
      * 根据id查询文章
+     *
      * @param id
      * @return
      */
@@ -28,8 +30,24 @@ public interface ArticleDao extends BaseMapper<Article> {
 
     /**
      * 自增浏览量
+     *
      * @param id
      * @return
      */
     int incrementView(@Param("id") Long id);
+
+    /**
+     * 自增评论量
+     *
+     * @param id
+     * @return
+     */
+    int incrementComments(@Param("id") Long id);
+
+    /**
+     * 看板统计
+     *
+     * @return
+     */
+    PostsVO selectPostsTotal();
 }

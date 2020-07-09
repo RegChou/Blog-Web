@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muxui.blog.service.posts.dao.ArticleCommentsDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.muxui.blog.service.posts.domain.ArticleComments">
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="author_id" property="authorId"/>
+        <result column="content" property="content"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="status" property="status"/>
+        <result column="article_id" property="articleId"/>
+        <result column="tree_path" property="treePath"/>
+    </resultMap>
+
+    <select id="selectArticleCommentsByArticleIdList" resultType="com.muxui.blog.service.posts.domain.vo.ArticleCommentsVo">
+        SELECT
+        articleComments.id,
+        articleComments.content,
+        articleComments.create_time createTime,
+        authUser.name authorName,
+        authUser.avatar authorAvatar,
+        parentAuthUser.name parentUserName
+        FROM
+        muxui_article_comments articleComments
+        LEFT JOIN muxui_auth_user authUser ON articleComments.author_id = authUser.id
+        LEFT JOIN muxui_article_comments parentArticleComments ON articleComments.parent_id = parentArticleComments.id
+        LEFT JOIN muxui_auth_user parentAuthUser ON parentArticleComments.author_id = parentAuthUser.id
+        <where>
+            articleComments.article_id = #{articleId}
+        </where>
+
+        ORDER BY articleComments.create_time DESC
+    </select>
+
+    <select id="selectArticleCommentsList" resultType="com.muxui.blog.service.posts.domain.vo.ArticleCommentsVo">
+        SELECT
+        articleComments.id,
+        articleComments.content,
+        authUser.name authorName ,
+        authUser.avatar authorAvatar,
+        parentAuthUser.name parentUserName,
+        article.title
+        FROM
+        muxui_article_comments articleComments
+        LEFT JOIN muxui_auth_user authUser ON articleComments.author_id = authUser.id
+        LEFT JOIN muxui_article_comments parentArticleComments ON articleComments.parent_id = parentArticleComments.id
+        LEFT JOIN muxui_auth_user parentAuthUser ON parentArticleComments.author_id = parentAuthUser.id
+        LEFT JOIN muxui_article article ON article.id = articleComments.article_id
+        <where>
+            <if test="articleComments.keywords != null and articleComments.keywords != ''">
+                ( articleComments.content LIKE #{articleComments.keywords} OR article.title LIKE #{articleComments.keywords} )
+            </if>
+            <if test="articleComments.id != null">
+                and articleComments.id=#{articleComments.id}
+            </if>
+        </where>
+        ORDER BY articleComments.create_time DESC
+    </select>
+
+</mapper>

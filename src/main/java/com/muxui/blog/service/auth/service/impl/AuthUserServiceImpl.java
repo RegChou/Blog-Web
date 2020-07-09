@@ -2,12 +2,18 @@ package com.muxui.blog.service.auth.service.impl;
 
 
 import cn.hutool.crypto.SecureUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.muxui.blog.common.base.BeanTool;
 import com.muxui.blog.common.base.Result;
 import com.muxui.blog.common.base.ResultCode;
 import com.muxui.blog.common.enums.RoleEnum;
 import com.muxui.blog.common.util.JwtUtil;
+import com.muxui.blog.common.util.PageUtil;
 import com.muxui.blog.common.util.SessionUtil;
 import com.muxui.blog.service.auth.dao.AuthTokenDao;
 import com.muxui.blog.service.auth.dao.AuthUserDao;
@@ -27,11 +33,11 @@ import org.apache.commons.mail.HtmlEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -139,9 +145,93 @@ public class AuthUserServiceImpl extends ServiceImpl<AuthUserDao, AuthUser> impl
     }
 
     @Override
+    public Result updateAdmin(AuthUserVO authUserVO) {
+        if (authUserVO == null) {
+            return new Result(ResultCode.PARAM_INCORRECT);
+        }
+        UserSessionVO userSessionInfo = SessionUtil.getUserSessionInfo();
+        authUserDao.updateById(new AuthUser()
+                .setId(userSessionInfo.getId())
+                .setEmail(authUserVO.getEmail())
+                .setAvatar(authUserVO.getAvatar())
+                .setName(authUserVO.getName())
+                .setIntroduction(authUserVO.getIntroduction())
+        );
+        return Result.SUCCESS();
+    }
+
+    @Override
+    public Result updatePassword(AuthUserVO authUserVO) {
+        if (StringUtils.isBlank(authUserVO.getPassword()) || StringUtils.isBlank(authUserVO.getPasswordOld())) {
+            return new Result(ResultCode.PARAM_INCORRECT);
+        }
+        UserSessionVO userSessionInfo = SessionUtil.getUserSessionInfo();
+        AuthUser authUser = authUserDao.selectById(userSessionInfo.getId());
+        if (!SecureUtil.md5(authUserVO.getPasswordOld()).equals(authUser.getPassword())) {
+            return new Result(ResultCode.UPDATE_PASSWORD_ERROR);
+        }
+        authUserDao.updateById(new AuthUser().setId(userSessionInfo.getId()).setPassword(SecureUtil.md5(authUserVO.getPassword())));
+        return Result.SUCCESS();
+    }
+
+    @Override
     public Result logout() {
         UserSessionVO userSessionInfo = SessionUtil.getUserSessionInfo();
         authTokenDao.delete(new LambdaQueryWrapper<AuthToken>().eq(AuthToken::getUserId, userSessionInfo.getId()));
         return Result.SUCCESS();
+    }
+
+    @Override
+    public Result getUserList(AuthUserVO authUserVO) {
+        Page page = Optional.ofNullable(PageUtil.checkAndInitPage(authUserVO)).orElse(PageUtil.initPage());
+        LambdaQueryWrapper<AuthUser> authUserLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotBlank(authUserVO.getKeywords())) {
+            authUserLambdaQueryWrapper.like(AuthUser::getName, authUserVO.getKeywords());
+        }
+        if (StringUtils.isNotBlank(authUserVO.getName())) {
+            authUserLambdaQueryWrapper.eq(AuthUser::getName, authUserVO.getName());
+        }
+        if (authUserVO.getStatus() != null) {
+            authUserLambdaQueryWrapper.eq(AuthUser::getStatus, authUserVO.getStatus());
+        }
+
+        IPage<AuthUser> authUserIPage = authUserDao.selectPage(page, authUserLambdaQueryWrapper.orderByDesc(AuthUser::getRoleId).orderByDesc(AuthUser::getId));
+        List<AuthUser> records = authUserIPage.getRecords();
+
+        List<AuthUserVO> authUserVOList = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(records)) {
+            records.forEach(authUser -> {
+                authUserVOList.add(new AuthUserVO()
+                        .setId(authUser.getId())
+                        .setStatus(authUser.getStatus())
+                        .setName(authUser.getName())
+                        .setRoleId(authUser.getRoleId())
+                        .setIntroduction(authUser.getIntroduction())
+                        .setStatus(authUser.getStatus())
+                );
+            });
+        }
+        return new Result(ResultCode.SUCCESS,authUserVOList, PageUtil.initPageInfo(page));
+    }
+
+    @Override
+    public Result deleteUsers(Long id) {
+        if (id != null && authUserDao.selectCount(new LambdaQueryWrapper<AuthUser>().eq(AuthUser::getId, id).eq(AuthUser::getRoleId, 2)) == 0) {
+            authUserDao.deleteById(id);
+            return Result.SUCCESS();
+        }
+        return Result.ERROR();
+    }
+
+    @Override
+    public Result saveAuthUserStatus(AuthUserVO authUserVO) {
+        if (authUserVO.getStatus() != null
+                && authUserVO.getId() != null
+                && authUserDao.selectCount(new LambdaQueryWrapper<AuthUser>()
+                .eq(AuthUser::getId, authUserVO.getId()).eq(AuthUser::getRoleId, 2)) == 0) {
+            authUserDao.updateById(new AuthUser().setId(authUserVO.getId()).setStatus(authUserVO.getStatus()));
+            return Result.SUCCESS();
+        }
+        return Result.ERROR();
     }
 }

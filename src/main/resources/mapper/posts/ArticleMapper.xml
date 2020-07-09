@@ -99,4 +99,16 @@
         UPDATE muxui_article SET views = views + 1 WHERE id = #{id}
     </update>
 
+    <update id="incrementComments">
+        UPDATE muxui_article SET comments = comments + 1 WHERE id = #{id}
+    </update>
+
+    <select id="selectPostsTotal" resultType="com.muxui.blog.service.posts.domain.vo.PostsVO">
+        SELECT
+            SUM(comments) commentsTotal,
+            SUM(views) viewsTotal
+        FROM
+            muxui_article article
+    </select>
+
 </mapper>

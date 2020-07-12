@@ -8,7 +8,9 @@ package com.muxui.blog.service.posts.controller;
  */
 
 import com.muxui.blog.common.annotation.LoginRequired;
+import com.muxui.blog.common.annotation.OperateLog;
 import com.muxui.blog.common.base.Result;
+import com.muxui.blog.common.enums.OperateEnum;
 import com.muxui.blog.common.util.ThrowableUtils;
 import com.muxui.blog.service.posts.domain.vo.PostsVO;
 import com.muxui.blog.service.posts.service.ArticleService;
@@ -27,6 +29,17 @@ public class ArticleController {
     @GetMapping("/v1/list")
     public Result getFetchList(PostsVO postsVO) {
         return articleService.getFetchList(postsVO);
+    }
+
+    @GetMapping("/weight/v1/list")
+    public Result getWeightList(PostsVO postsVO) {
+        postsVO.setIsWeight(1);
+        return articleService.getPostsList(postsVO);
+    }
+
+    @GetMapping("/archive/v1/list")
+    public Result getArchiveTotalByDateList(PostsVO postsVO) {
+        return articleService.getArchiveTotalByDateList(postsVO);
     }
 
     @PostMapping("/v1/add")

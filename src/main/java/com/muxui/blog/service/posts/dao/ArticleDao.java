@@ -7,6 +7,7 @@ import com.muxui.blog.service.posts.domain.vo.PostsVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -50,4 +51,11 @@ public interface ArticleDao extends BaseMapper<Article> {
      * @return
      */
     PostsVO selectPostsTotal();
+
+    /**
+     * 按照时间进行归档统计某个时间有多个文章
+     */
+    List<PostsVO> selectArchiveTotalGroupDateList();
+
+    List<PostsVO> selectByArchiveDate(LocalDateTime archiveDate);
 }

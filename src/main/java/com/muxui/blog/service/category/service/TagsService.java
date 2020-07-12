@@ -42,6 +42,10 @@ public interface TagsService extends IService<Tags> {
      */
     Result deleteTags(Long id);
 
-
-
+    /**
+     * 查询标签的列表
+     * @param tagsVO
+     * @return
+     */
+    Result getTagsAndArticleQuantityList(TagsVO tagsVO);
 }

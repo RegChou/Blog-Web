@@ -52,3 +52,9 @@ mybatis-plus:
 
 logging:
   config: classpath:config/spring-logback.xml
+
+github:
+  client:
+    id: 42897ab0b37f5972b163
+    secret: e585510f9aed6bdad11909c5a275934ba9aef7fb
+    url: http://127.0.0.1:8085/api/rearinfo/auth/github/callback

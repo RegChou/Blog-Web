@@ -25,4 +25,5 @@ public interface ArticleCommentsDao extends BaseMapper<ArticleComments> {
     List<ArticleCommentsVo> selectArticleCommentsList(Page<ArticleCommentsVo>  page, @Param("articleComments") ArticleCommentsVo articleCommentsVo);
 
     List<ArticleCommentsVo> selectArticleCommentsList(@Param("articleComments") ArticleCommentsVo articleComments);
+
 }

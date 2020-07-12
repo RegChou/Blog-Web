@@ -26,6 +26,11 @@ public class TagsController {
         return this.tagsService.getTagsList(tagsVO);
     }
 
+    @GetMapping("/tags-article-quantity/v1/list")
+    public Result getTagsAndArticleQuantityList(TagsVO tagsVO, BindingResult result) {
+        ThrowableUtils.checkParamArgument(result);
+        return this.tagsService.getTagsAndArticleQuantityList(tagsVO);
+    }
     @LoginRequired
     @PostMapping("/v1/add")
     public Result saveTags(@RequestBody TagsVO tagsVO, BindingResult result) {

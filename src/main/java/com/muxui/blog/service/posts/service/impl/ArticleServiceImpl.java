@@ -214,4 +214,42 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleDao, Article> impleme
         articleDao.updateById(new Article().setId(postsVO.getId()).setStatus(postsVO.getStatus()));
         return Result.SUCCESS();
     }
+
+    @Override
+    public Result getPostsList(PostsVO postsVO) {
+        postsVO = Optional.ofNullable(postsVO).orElse(new PostsVO());
+        Page page = Optional.of(PageUtil.checkAndInitPage(postsVO)).orElse(PageUtil.initPage());
+        if (StringUtils.isNotBlank(postsVO.getKeywords())) {
+            postsVO.setKeywords("%" + postsVO.getKeywords() + "%");
+        }
+        if (StringUtils.isNoneBlank(postsVO.getTitle())) {
+            postsVO.setTitle("%" + postsVO.getTitle() + "%");
+        }
+        List<PostsVO> postsVOList = articleDao.selectPostsList(page, postsVO);
+        if (!CollectionUtils.isEmpty(postsVOList)) {
+            postsVOList.forEach(postsVO1 -> {
+                List<InTags> postsTagsList = inTagsDao.selectList(new LambdaQueryWrapper<InTags>().eq(InTags::getArticleId, postsVO1.getId()));
+                List<TagsVO> tagsVOList = new ArrayList<>();
+                if (!CollectionUtils.isEmpty(postsTagsList)) {
+                    postsTagsList.forEach(postsTags -> {
+                        Tags tags = tagsDao.selectById(postsTags.getTagsId());
+                        tagsVOList.add(new TagsVO().setId(tags.getId()).setName(tags.getName()));
+                    });
+                }
+                postsVO1.setTagsList(tagsVOList);
+            });
+        }
+
+        return new Result(ResultCode.SUCCESS,postsVOList, PageUtil.initPageInfo(page));
+    }
+
+    @Override
+    public Result getArchiveTotalByDateList(PostsVO postsVO) {
+        List<PostsVO> postsVOList = articleDao.selectArchiveTotalGroupDateList();
+        postsVOList.forEach(obj -> {
+            // 查询每一个时间点中的文章
+            obj.setArchivePosts(articleDao.selectByArchiveDate(obj.getArchiveDate()));
+        });
+        return new Result(ResultCode.SUCCESS,postsVOList);
+    }
 }

@@ -92,4 +92,18 @@ public class TagsServiceImpl extends ServiceImpl<TagsDao, Tags> implements TagsS
         this.inTagsDao.delete(new LambdaQueryWrapper<InTags>().eq(InTags::getTagsId, id));
         return Result.SUCCESS();
     }
+
+    @Override
+    public Result getTagsAndArticleQuantityList(TagsVO tagsVO) {
+        List<Tags> records = this.tagsDao.selectList(new LambdaQueryWrapper<Tags>().orderByDesc(Tags::getId));
+
+        List<TagsVO> tagsList = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(records)) {
+            records.forEach(tags -> {
+                Integer total = inTagsDao.selectCount(new LambdaQueryWrapper<InTags>().eq(InTags::getTagsId, tags.getId()));
+                tagsList.add(new TagsVO().setId(tags.getId()).setArticleTotal(total).setName(tags.getName()));
+            });
+        }
+        return new Result(ResultCode.SUCCESS,tagsList);
+    }
 }

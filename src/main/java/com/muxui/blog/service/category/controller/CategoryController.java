@@ -21,7 +21,6 @@ public class CategoryController {
     private CategoryService categoryService;
 
 
-    @LoginRequired
     @GetMapping("/v1/list")
     public Result statisticsList(CategoryVO categoryVO){
         return categoryService.getCategoryList(categoryVO);

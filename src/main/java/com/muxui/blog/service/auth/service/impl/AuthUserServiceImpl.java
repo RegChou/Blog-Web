@@ -1,7 +1,10 @@
 package com.muxui.blog.service.auth.service.impl;
 
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.http.Header;
+import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -12,6 +15,8 @@ import com.muxui.blog.common.base.BeanTool;
 import com.muxui.blog.common.base.Result;
 import com.muxui.blog.common.base.ResultCode;
 import com.muxui.blog.common.enums.RoleEnum;
+import com.muxui.blog.common.sync.GitHubProvider;
+import com.muxui.blog.common.util.JsonUtil;
 import com.muxui.blog.common.util.JwtUtil;
 import com.muxui.blog.common.util.PageUtil;
 import com.muxui.blog.common.util.SessionUtil;
@@ -19,7 +24,9 @@ import com.muxui.blog.service.auth.dao.AuthTokenDao;
 import com.muxui.blog.service.auth.dao.AuthUserDao;
 import com.muxui.blog.service.auth.domain.AuthToken;
 import com.muxui.blog.service.auth.domain.vo.AuthUserVO;
+import com.muxui.blog.service.auth.domain.vo.GithubVO;
 import com.muxui.blog.service.auth.domain.vo.UserSessionVO;
+import com.muxui.blog.service.auth.dto.AccessTokenDTO;
 import com.muxui.blog.service.auth.dto.EmailDTO;
 import com.muxui.blog.service.auth.dto.UserDTO;
 import com.muxui.blog.service.auth.domain.AuthUser;
@@ -31,10 +38,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.commons.mail.HtmlEmail;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -233,5 +246,70 @@ public class AuthUserServiceImpl extends ServiceImpl<AuthUserDao, AuthUser> impl
             return Result.SUCCESS();
         }
         return Result.ERROR();
+    }
+
+    @Override
+    public Result getMasterUserInfo() {
+        AuthUser authUser = authUserDao.selectOne(new LambdaQueryWrapper<AuthUser>().eq(AuthUser::getRoleId, RoleEnum.ADMIN.getRoleId()));
+        AuthUserVO authUserVO = new AuthUserVO();
+        if (authUser != null) {
+            authUserVO.setName(authUser.getName())
+                    .setIntroduction(authUser.getIntroduction())
+                    .setEmail(authUser.getEmail())
+                    .setAvatar(authUser.getAvatar());
+        }
+        return new Result(ResultCode.SUCCESS,authUserVO);
+    }
+
+    @Value("${github.client.id}")
+    private String clientId;
+    @Value("${github.client.secret}")
+    private String clientSecret;
+    @Value("${github.client.url}")
+    private String url;
+    @Autowired
+    private GitHubProvider gitHubProvider;
+
+    @Override
+    public Result oauthLoginByGithub(){
+        String authorizeUrl = "https://github.com/login/oauth/authorize?client_id="+clientId+"&redirect_uri="+ url +"&scope=muxuiblog&state=1";
+        return new Result(ResultCode.SUCCESS,authorizeUrl);
+    }
+
+    @Override
+    public String githubLogincallback(String code, String state) {
+        log.debug("code {},state {}", code, state);
+        AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
+        accessTokenDTO.setClient_id(clientId);
+        accessTokenDTO.setClient_secret(clientSecret);
+        accessTokenDTO.setCode(code);
+        accessTokenDTO.setRedirect_uri(url);
+        accessTokenDTO.setState(state);
+        String accessToken = gitHubProvider.getAccessToken(accessTokenDTO);
+        GithubVO user = gitHubProvider.getUser(accessToken);
+        if (user == null){
+            return "<h3>登录失败....</h3>";
+        }else {
+            AuthUserVO authUserVO = new AuthUserVO();
+            authUserVO.setSocialId(state);
+            authUserVO.setAvatar(user.getAvatar_url());
+            authUserVO.setName(user.getLogin());
+            authUserVO.setHtmlUrl(user.getHtml_url());
+            authUserVO.setRoleId(1L);
+            String html = "<head>\n" +
+                    "  <meta charset=\"UTF-8\">\n" +
+                    "</head>" +
+                    "<body>\n" +
+                    "   <p style=\"text-align: center;\"><h3>登录中....</h3></p>\n" +
+                    "</body>" +
+                    "<script>\n" +
+                    "  window.onload.function () {\n" +
+                    "    var message =" + JsonUtil.toJsonString(authUserVO) + ";\n" +
+                    "    window.opener.parent.postMessage(message, '*');\n" +
+                    "    parent.window.close();\n" +
+                    "  }\n" +
+                    "</script>\n";
+            return html;
+        }
     }
 }

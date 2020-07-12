@@ -23,6 +23,7 @@ public class FriendshipLinkController {
         return friendshipLinkService.getFriendshipLinkList(friendshipLinkVO);
     }
 
+
     @GetMapping("/v2/list")
     public Result getFriendshipLinkMap(FriendshipLinkVO friendshipLinkVO) {
         return friendshipLinkService.getFriendshipLinkMap(friendshipLinkVO);

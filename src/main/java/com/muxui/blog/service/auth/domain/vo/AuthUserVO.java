@@ -57,4 +57,6 @@ public class AuthUserVO extends PageResult<AuthUserVO> {
 
     private Integer userCount;
     private Integer toDayNew;
+
+    private String htmlUrl;
 }

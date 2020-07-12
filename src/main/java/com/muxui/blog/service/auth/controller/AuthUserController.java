@@ -5,11 +5,14 @@ import com.muxui.blog.common.base.Result;
 import com.muxui.blog.common.enums.RoleEnum;
 import com.muxui.blog.service.auth.domain.AuthUser;
 import com.muxui.blog.service.auth.domain.vo.AuthUserVO;
+import com.muxui.blog.service.auth.dto.AccessTokenDTO;
 import com.muxui.blog.service.auth.dto.EmailDTO;
 import com.muxui.blog.service.auth.dto.UserDTO;
 import com.muxui.blog.service.auth.service.AuthUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * @author ouyang
@@ -56,6 +59,10 @@ public class AuthUserController {
         return authUserService.updatePassword(authUserVO);
     }
 
+    @GetMapping("/master/v1/get")
+    public Result getMasterUserInfo() {
+        return authUserService.getMasterUserInfo();
+    }
 
     @PostMapping("/v1/logout")
     public Result logout() {
@@ -79,8 +86,13 @@ public class AuthUserController {
         return authUserService.saveAuthUserStatus(authUserVO);
     }
 
-//    @GetMapping("/github/v1/get")
-//    public Result oauthLoginByGithub() {
-//        return authUserService.oauthLoginByGithub();
-//    }
+    @GetMapping("/github/v1/get")
+    public Result oauthLoginByGithub(){
+        return authUserService.oauthLoginByGithub();
+    }
+
+    @GetMapping("/github/callback")
+    public String callback(@RequestParam String code, @RequestParam String state) {
+        return authUserService.githubLogincallback(code,state);
+    }
 }

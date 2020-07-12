@@ -49,4 +49,16 @@ public interface ArticleService extends IService<Article> {
      * @return
      */
     Result updateArticleStatus(PostsVO postsVO);
+
+    /**
+     * 查询文章的列表
+     * @param postsVO
+     * @return
+     */
+    Result getPostsList(PostsVO postsVO);
+
+    /**
+     * 按照时间归档的文章数量
+     */
+    Result getArchiveTotalByDateList(PostsVO postsVO);
 }

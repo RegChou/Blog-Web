@@ -47,7 +47,9 @@ public class ArticleCommentsServiceImpl extends ServiceImpl<ArticleCommentsDao, 
     public Result saveArticleComments(ArticleCommentsVo articleCommentsVo) {
         UserSessionVO userSessionInfo = SessionUtil.getUserSessionInfo();
         ArticleComments articleComments = new ArticleComments();
-        assert userSessionInfo != null;
+        if(userSessionInfo == null){
+            return new Result(ResultCode.NOTLOGGED);
+        }
         articleComments.setAuthorId(userSessionInfo.getId());
         articleComments.setContent(articleCommentsVo.getContent());
         articleComments.setArticleId(articleCommentsVo.getArticleId());

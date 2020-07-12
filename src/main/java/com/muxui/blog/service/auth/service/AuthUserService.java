@@ -59,4 +59,21 @@ public interface AuthUserService extends IService<AuthUser> {
     Result updateAdmin(AuthUserVO authUserVO);
 
     Result updatePassword(AuthUserVO authUserVO);
+
+    /**
+     * 获取作者信息
+     *
+     * @return
+     */
+    Result getMasterUserInfo();
+
+    /**
+     * 获取授权链接
+     */
+    Result oauthLoginByGithub();
+
+    /**
+     *  获取GitHub回调
+     */
+    String githubLogincallback(String code, String state);
 }

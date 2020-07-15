@@ -75,6 +75,10 @@ public class AuthUserController {
         return authUserService.getUserList(authUserVO);
     }
 
+    @PostMapping("/user/v1/login")
+    public Result saveUserByGithub(@RequestBody AuthUserVO authUserVO) {
+        return authUserService.saveUserByGithub(authUserVO);
+    }
     @DeleteMapping("/user/v1/{id}")
     public Result deleteUser(@PathVariable Long id) {
         return authUserService.deleteUsers(id);

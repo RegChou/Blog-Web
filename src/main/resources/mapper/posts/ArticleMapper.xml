@@ -59,8 +59,8 @@
             <if test="condition.categoryId != null and condition.categoryId != ''">
                 AND ac.category_id  = #{condition.categoryId}
             </if>
-            <if test="condition.postsTagsId != null and condition.postsTagsId != ''">
-                AND ac.tags_id = #{condition.postsTagsId}
+            <if test="condition.tagsId != null and condition.tagsId != ''">
+                AND inTags.tags_id = #{condition.tagsId}
             </if>
             <if test="condition.title != null and condition.title != ''">
                 AND ac.title LIKE #{condition.title}

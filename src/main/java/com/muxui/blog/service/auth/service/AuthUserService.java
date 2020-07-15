@@ -76,4 +76,9 @@ public interface AuthUserService extends IService<AuthUser> {
      *  获取GitHub回调
      */
     String githubLogincallback(String code, String state);
+
+    /**
+     * 保存用户信息
+     */
+    Result saveUserByGithub(AuthUserVO authUserVO);
 }

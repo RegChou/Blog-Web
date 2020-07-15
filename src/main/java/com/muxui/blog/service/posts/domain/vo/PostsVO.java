@@ -135,5 +135,5 @@ public class PostsVO extends PageResult<PostsVO> {
     /**
      * 标签ID
      */
-    private String postsTagsId;
+    private String tagsId;
 }

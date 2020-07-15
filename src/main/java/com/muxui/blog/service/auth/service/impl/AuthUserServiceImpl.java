@@ -1,11 +1,7 @@
 package com.muxui.blog.service.auth.service.impl;
 
 
-import cn.hutool.core.codec.Base64;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
@@ -16,10 +12,7 @@ import com.muxui.blog.common.base.Result;
 import com.muxui.blog.common.base.ResultCode;
 import com.muxui.blog.common.enums.RoleEnum;
 import com.muxui.blog.common.sync.GitHubProvider;
-import com.muxui.blog.common.util.JsonUtil;
-import com.muxui.blog.common.util.JwtUtil;
-import com.muxui.blog.common.util.PageUtil;
-import com.muxui.blog.common.util.SessionUtil;
+import com.muxui.blog.common.util.*;
 import com.muxui.blog.service.auth.dao.AuthTokenDao;
 import com.muxui.blog.service.auth.dao.AuthUserDao;
 import com.muxui.blog.service.auth.domain.AuthToken;
@@ -261,6 +254,34 @@ public class AuthUserServiceImpl extends ServiceImpl<AuthUserDao, AuthUser> impl
         return new Result(ResultCode.SUCCESS,authUserVO);
     }
 
+
+    @Override
+    public Result saveUserByGithub(AuthUserVO authUserVO) {
+        log.debug("saveUserByGithub {}", authUserVO);
+        if (authUserVO == null || StringUtils.isBlank(authUserVO.getSocialId())) {
+            return new Result(ResultCode.PARAM_INCORRECT);
+        }
+        AuthUser authUser = authUserDao.selectOne(new LambdaQueryWrapper<AuthUser>().eq(AuthUser::getSocialId, authUserVO.getSocialId()));
+        if (authUser == null) {
+            authUser = new AuthUser();
+            authUser.setSocialId(authUserVO.getSocialId());
+            authUser.setAvatar(authUserVO.getAvatar());
+            authUser.setName(authUserVO.getName());
+            authUser.setRoleId(RoleEnum.USER.getRoleId());
+            authUser.setPassword(SecureUtil.hmacMd5(RandomStringUtils.random(32)).digestHex(authUserVO.getSocialId()));
+            authUserDao.insert(authUser);
+        } else {
+            if (1 == ToolUtil.getInteger(authUser.getStatus())) {
+                return new Result(ResultCode.LOGIN_DISABLE);
+            }
+        }
+        String token = JwtUtil.createToken(new AuthUserVO().setPassword(authUser.getPassword()).setName(authUser.getName()).setId(authUser.getId()));
+        authUserVO.setToken(token);
+        LocalDateTime time = DateUtils.addHours(new Date(), 7 * 24).toInstant().atOffset(ZoneOffset.of("+8")).toLocalDateTime();
+        authTokenDao.insert(new AuthToken().setUserId(authUser.getId()).setToken(token).setExpireTime(time));
+        return new Result(ResultCode.LOGINSUCCESS,authUserVO);
+    }
+
     @Value("${github.client.id}")
     private String clientId;
     @Value("${github.client.secret}")
@@ -295,21 +316,14 @@ public class AuthUserServiceImpl extends ServiceImpl<AuthUserDao, AuthUser> impl
             authUserVO.setAvatar(user.getAvatar_url());
             authUserVO.setName(user.getLogin());
             authUserVO.setHtmlUrl(user.getHtml_url());
-            authUserVO.setRoleId(1L);
-            String html = "<head>\n" +
-                    "  <meta charset=\"UTF-8\">\n" +
-                    "</head>" +
-                    "<body>\n" +
-                    "   <p style=\"text-align: center;\"><h3>登录中....</h3></p>\n" +
-                    "</body>" +
+            return  "<h3>登录中....</h3>\n" +
                     "<script>\n" +
-                    "  window.onload.function () {\n" +
+                    "  window.onload = function () {\n" +
                     "    var message =" + JsonUtil.toJsonString(authUserVO) + ";\n" +
                     "    window.opener.parent.postMessage(message, '*');\n" +
                     "    parent.window.close();\n" +
                     "  }\n" +
                     "</script>\n";
-            return html;
         }
     }
 }

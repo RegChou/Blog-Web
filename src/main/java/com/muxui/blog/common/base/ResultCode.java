@@ -29,7 +29,8 @@ public enum ResultCode {
     MOBILEORPASSWORDERROR(false,20001,"用户名或密码错误"),
     USERNOTEXIST(false,20002,"账户不存在，请注册！"),
     NOTLOGGED(false,20003,"未登录，请先登录！"),
-    UPDATE_PASSWORD_ERROR(false,20004,"密码修改失败！");
+    LOGIN_DISABLE(false,20004,"账户已被禁用,请联系管理员解除限制"),
+    UPDATE_PASSWORD_ERROR(false,20005,"密码修改失败！");
 
 
 

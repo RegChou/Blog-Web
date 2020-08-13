@@ -8,10 +8,9 @@ spring:
     active: dev
   datasource:
     name: muxui_blog
-    url: jdbc:mysql://129.211.145.40:9527/muxui_blog?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
-#    url: jdbc:mysql://127.0.0.1:3306/muxui_blog?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
+    url: jdbc:mysql://127.0.0.1:3306/muxui_blog?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=GMT%2B8
     username: root
-    password: d5V6mA@$d9K2
+    password: root
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.jdbc.Driver
 #    driver-class-name: com.mysql.cj.jdbc.Driver
@@ -32,9 +31,9 @@ spring:
       file-size-threshold: 512KB #当上传文件达到指定配置量的时候，会将文件内容写入到磁盘
       location: /   #设置上传文件的临时目录
   redis:
-    host: 129.211.145.40
+    host: 127.0.0.1
     port: 6379
-    password: IaG8M$Z7ievE
+    password: Ia3dfsfgw23
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
@@ -48,13 +47,13 @@ mybatis-plus:
   configuration:
     map-configuration-to-camel-case: true
     cache-enabled: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 logging:
   config: classpath:config/spring-logback.xml
 
 github:
   client:
-    id: 42897ab0b37f5972b163
-    secret: e585510f9aed6bdad11909c5a275934ba9aef7fb
+    id:
+    secret:
     url: http://127.0.0.1:8085/api/rearinfo/auth/github/callback

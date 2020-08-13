@@ -107,7 +107,7 @@ public class AuthUserServiceImpl extends ServiceImpl<AuthUserDao, AuthUser> impl
             //此处填邮箱地址和用户名,用户名可以任意填写
             email.setFrom("ouyangzoheng@163.com", "沐旭i");
             //此处填写邮箱地址和客户端授权码
-            email.setAuthentication("ouyangzoheng@163.com", "RJMWZPBVUSYTQKRE");
+            email.setAuthentication("ouyangzoheng@163.com", "OXQBIWAMO3234OHNV");
             //此处填写邮件名，邮件名可任意填写
             email.setSubject("沐旭Blog");
             // 6位随机验证码
@@ -115,7 +115,7 @@ public class AuthUserServiceImpl extends ServiceImpl<AuthUserDao, AuthUser> impl
             // 把验证码存到redis
             redisTemplate.opsForValue().set("article_" + emailDTO.getEmail(), code, 5, TimeUnit.MINUTES);
             //此处填写邮件内容
-            email.setMsg("您本次注册的验证码是:" + code);
+            email.setMsg("您本次注册的验证码是:" + code +" 5分钟后失效！");
             System.out.println("您本次注册的验证码是:" + code);
             email.send();
             return Result.SUCCESS();

@@ -21,7 +21,7 @@
         <result column="browser_name" property="browserName"/>
     </resultMap>
 
-    <select id="selectLogsList" resultType="com.muxui.blog.service.log.domain.AuthUserLog">
+    <select id="selectLogsList" resultType="com.muxui.blog.service.log.domain.vo.AuthUserLogVO">
         SELECT
         <include refid="Base_Column_List"/>
         FROM muxui_auth_user_log
@@ -43,7 +43,7 @@
         SELECT
         <include refid="Base_Column_List"/>,
         COUNT( 1 ) AS count
-        FROM plumemo_auth_user_log
+        FROM muxui_auth_user_log
         WHERE CODE = #{code}
         GROUP BY parameter
     </select>

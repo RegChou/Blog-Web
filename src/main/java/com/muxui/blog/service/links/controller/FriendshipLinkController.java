@@ -2,7 +2,9 @@ package com.muxui.blog.service.links.controller;
 
 
 import com.muxui.blog.common.annotation.LoginRequired;
+import com.muxui.blog.common.annotation.OperateLog;
 import com.muxui.blog.common.base.Result;
+import com.muxui.blog.common.enums.OperateEnum;
 import com.muxui.blog.common.util.ThrowableUtils;
 import com.muxui.blog.service.links.domain.vo.FriendshipLinkVO;
 import com.muxui.blog.service.links.service.FriendshipLinkService;
@@ -29,6 +31,7 @@ public class FriendshipLinkController {
         return friendshipLinkService.getFriendshipLinkMap(friendshipLinkVO);
     }
 
+    @OperateLog(module = "新增友联", code= OperateEnum.GET_LINKS_ADD)
     @LoginRequired
     @PostMapping("/v1/add")
     public Result saveFriendshipLink(@RequestBody FriendshipLinkVO friendshipLinkVO, BindingResult result) {
@@ -36,6 +39,7 @@ public class FriendshipLinkController {
         return friendshipLinkService.saveFriendshipLink(friendshipLinkVO);
     }
 
+    @OperateLog(module = "编辑友联", code= OperateEnum.GET_LINKS_EDIT)
     @LoginRequired
     @PutMapping("/v1/update")
     public Result updateFriendshipLink(@RequestBody FriendshipLinkVO friendshipLinkVO) {
@@ -48,6 +52,7 @@ public class FriendshipLinkController {
         return friendshipLinkService.getFriendshipLink(id);
     }
 
+    @OperateLog(module = "删除友联", code= OperateEnum.GET_LINKS_DELE)
     @LoginRequired
     @DeleteMapping("/v1/{id}")
     public Result deleteFriendshipLink(@PathVariable Long id) {

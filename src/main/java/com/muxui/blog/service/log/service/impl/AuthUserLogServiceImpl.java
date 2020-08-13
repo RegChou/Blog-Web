@@ -55,7 +55,7 @@ public class AuthUserLogServiceImpl extends ServiceImpl<AuthUserLogDao, AuthUser
     public Result getLogsList(AuthUserLogVO authUserLogVO) {
         logger.debug("queryPage AuthUserLog ,the entity is {}", authUserLogVO.toString());
         authUserLogVO = Optional.ofNullable(authUserLogVO).orElse(new AuthUserLogVO());
-        Page page = Optional.of(PageUtil.checkAndInitPage(authUserLogVO)).orElse(PageUtil.initPage());
+        Page page = Optional.ofNullable(PageUtil.checkAndInitPage(authUserLogVO)).orElse(PageUtil.initPage());
         if (StringUtils.isNotBlank(authUserLogVO.getKeywords())) {
             authUserLogVO.setKeywords("%" + authUserLogVO.getKeywords() + "%");
         }

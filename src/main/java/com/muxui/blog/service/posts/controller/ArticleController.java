@@ -26,6 +26,7 @@ public class ArticleController {
     @Autowired
     ArticleService articleService;
 
+    @OperateLog(module = "文章列表", code=OperateEnum.GET_POSTS_LIST)
     @GetMapping("/v1/list")
     public Result getFetchList(PostsVO postsVO) {
         return articleService.getFetchList(postsVO);
@@ -42,16 +43,20 @@ public class ArticleController {
         return articleService.getArchiveTotalByDateList(postsVO);
     }
 
+    @OperateLog(module = "新增文章", code=OperateEnum.GET_POSTS_ADD)
     @PostMapping("/v1/add")
     public Result saveArticle(@RequestBody PostsVO postsVO, BindingResult result) {
         ThrowableUtils.checkParamArgument(result);
         return articleService.saveArticle(postsVO);
     }
+    @OperateLog(module = "获取文章", code=OperateEnum.GET_POSTS_DETAIL)
     @GetMapping("/v1/{id}")
     public Result getArticle(@PathVariable Long id) {
         return this.articleService.getArticle(id);
     }
 
+
+    @OperateLog(module = "修改文章", code=OperateEnum.GET_POSTS_EDIT)
     @PutMapping("/v1/update")
     @LoginRequired
     public Result updateArticle(@RequestBody PostsVO postsVO, BindingResult result) {
@@ -59,6 +64,7 @@ public class ArticleController {
         return this.articleService.updateArticle(postsVO);
     }
 
+    @OperateLog(module = "删除文章", code=OperateEnum.GET_POSTS_DELE)
     @LoginRequired
     @DeleteMapping("/v1/delete/{id}")
     public Result deleteArticle(@PathVariable Long id) {
